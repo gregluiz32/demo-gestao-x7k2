@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P5 · Importação de Excel</title>
+<style>
+:root{
+  --ink:#1f2a37;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9;--card:#fff;
+  --accent:#1d6fa5;--accent-d:#155781;--accent-l:#e6f1f8;
+  --ok:#2e7d32;--ok-l:#e8f5e9;--warn:#b26a00;--warn-l:#fff4e0;--bad:#c62828;--bad-l:#fdecec;
+  --t-dom:#1d6fa5;--t-ger:#2e7d32;--t-sofa:#7b4bb7;--t-col:#00838f;--t-tap:#d9731a;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.proto-banner{background:#fff8e1;border-bottom:1px solid #f1dd9b;color:#7a5b00;text-align:center;padding:6px 12px;font-size:12px}
+.topbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:13px}
+.topbar h1{font-size:18px}
+.topbar .sub{color:var(--muted);font-size:13px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ink)}
+.btn:hover{background:#f1f4f8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.danger{color:var(--bad);border-color:#f2bcbc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:7px 14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.t-dom{background:var(--t-dom)}.t-ger{background:var(--t-ger)}.t-sofa{background:var(--t-sofa)}.t-col{background:var(--t-col)}.t-tap{background:var(--t-tap)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px}
+.badge.bad{background:var(--bad-l);color:var(--bad)}.badge.warn{background:var(--warn-l);color:var(--warn)}.badge.ok{background:var(--ok-l);color:var(--ok)}.badge.info{background:var(--accent-l);color:var(--accent)}
+.questions{margin-top:24px;border-left:4px solid var(--accent);background:var(--accent-l)}
+.questions h3{font-size:15px;margin-bottom:6px}
+.questions ul{margin:6px 0 0 18px;padding:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a37;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;z-index:50}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;z-index:40}
+.overlay.show{display:block}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;background:#fff;color:var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<style>
+.steps{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.steps div{flex:1;min-width:140px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--muted);font-size:13px}
+.steps div.on{border-color:var(--accent);color:var(--accent);background:var(--accent-l);font-weight:600}
+.steps div.done{color:var(--ok);border-color:#bfe0c1;background:var(--ok-l)}
+.drop{border:2px dashed #c7d0db;border-radius:12px;background:#fff;padding:40px 20px;text-align:center}
+.drop .ic{font-size:34px}
+.map td select{width:100%}
+.map .sample{color:var(--muted);font-size:12px}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.sum div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.sum b{font-size:22px;display:block}
+.sum small{color:var(--muted)}
+.sum .ok b{color:var(--ok)}.sum .warn b{color:var(--warn)}.sum .bad b{color:var(--bad)}
+tr.err td{background:var(--bad-l)}tr.dup td{background:var(--warn-l)}tr.wrn td{background:#fffaf0}tr.ign td{opacity:.55}
+.msgs span{display:block;font-size:12px}
+.msgs .e{color:var(--bad)}.msgs .w{color:var(--warn)}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.bar .sp{flex:1}
+.fin{text-align:center;padding:30px}
+.fin .big{font-size:42px}
+</style>
+</head>
+<body>
+<div class="proto-banner">Protótipo com dados fictícios · P5 Importação de Excel</div>
+<div class="topbar"><a class="back" href="index.html">← Protótipos</a><h1>Importar clientes de uma folha Excel</h1><span class="sub">Nada é gravado até confirmar</span></div>
+<div class="wrap">
+  <div class="steps" id="steps"></div>
+  <div id="main"></div>
+  <div class="card questions">
+    <h3>Questões para validar com a Rede Clean</h3>
+    <ul>
+      <li>Quantas folhas existem hoje e o que contém cada uma (clientes, agenda, pagamentos, despesas)?</li>
+      <li>Há um identificador único do cliente (NIF, telefone, código interno)? Como distinguem dois clientes com o mesmo nome?</li>
+      <li>Há histórico antigo a importar (serviços e pagamentos) ou só os clientes ativos?</li>
+      <li>Qual a qualidade dos dados: datas em formatos diferentes, telefones com espaços, campos de texto livre?</li>
+      <li>Quem confere a importação e quanto tempo pode demorar a correção de erros?</li>
+      <li>Que informação sensível existe nas folhas (dados pessoais, valores)? Como as partilham connosco?</li>
+    </ul>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const HEAD=['Nome Cliente','Telemóvel','Mail','Morada','Início','Periodicidade','Valor','Obs'];
+const ROWS=[
+ ['Marta Neves','912345601','marta.exemplo@mail.test','Rua A 1, Montijo','03/02/2025','Semanal','54','Chave com vizinha'],
+ ['Fam. Almeida','91 234 5602','almeida.exemplo@mail.test','Rua B 2, Montijo','15/03/2025','semanal','54',''],
+ ['Paulo Ramos','912345603','','Rua C 3, Alcochete','2025-06-10','Quinzenal','72','Cão'],
+ ['Clínica Exemplo Saúde','210000001','geral@clinica.test','Av. D 4, Lisboa','01/09/2025','Mensal','320',''],
+ ['Marta Neves','912345601','marta.exemplo@mail.test','Rua A 1, Montijo','03/02/2025','Semanal','54','Chave com vizinha'],
+ ['Helena Cruz','91234560','helena.exemplo@mail.test','Rua das Flores 12, Montijo','02/02/2026','Semanal','54',''],
+ ['Luís Matias','912345605','luis.exemplo@mail.test','Rua E 5, Seixal','31/02/2025','Semanal','54',''],
+ ['Nuno Dias','912345606','nuno.exemplo.mail.test','Rua F 6, Setúbal','10/06/2026','Pontual','70',''],
+ ['Tiago Brás','912345607','','Rua G 7, Seixal','20/05/2026','A cada 15 dias','45',''],
+ ['Escritório Exemplo Lda','210000002','info@escritorio.test','Av. H 8, Lisboa','01/09/2025','Semanal','34',''],
+ ['','912345609','','Rua I 9, Moita','12/11/2025','Pontual','55',''],
+ ['Ana Reis','912345610','','Av. da Liberdade 45, Alcochete','05/04/2026','Pontual','45 euros',''],
+ ['M. Neves','912 345 601','','Rua A 1, Montijo','03/02/2025','Semanal','54','repetido?'],
+ ['Rita Faria','912345612','','Rua J 10, Barreiro','','Pontual','135','']
+];
+const FIELDS={nome:'Nome',tel:'Telefone',email:'Email',morada:'Morada',inicio:'Data de início',per:'Periodicidade',valor:'Valor contratado',obs:'Notas',ign:'— Ignorar coluna —'};
+const PER={'semanal':'Semanal','quinzenal':'Quinzenal','mensal':'Mensal','pontual':'Pontual','a cada 15 dias':'Quinzenal'};
+let map=['nome','tel','email','morada','inicio','per','valor','obs'];
+let step=1,acts={};
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+function validDate(s){let m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);let y,mo,d;
+ if(m){d=+m[1];mo=+m[2];y=+m[3]}else if(m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/)){y=+m[1];mo=+m[2];d=+m[3]}else return false;
+ const t=new Date(y,mo-1,d);return t.getFullYear()===y&&t.getMonth()===mo-1&&t.getDate()===d}
+const digits=s=>s.replace(/\D/g,'');
+function validate(){
+  const seen={};
+  return ROWS.map((r,i)=>{
+    const v={};map.forEach((f,c)=>{if(f!=='ign')v[f]=r[c]});
+    const err=[],wrn=[];let dup=null;
+    if(!v.nome||!v.nome.trim())err.push('Nome em falta');
+    if(v.tel!==undefined){const d=digits(v.tel);if(d.length!==9&&!(d.length===9))err.push('Telefone inválido ('+d.length+' dígitos)')}
+    if(v.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email))err.push('Email inválido');
+    if(v.inicio&&!validDate(v.inicio))err.push('Data inválida');
+    if(v.inicio===''&&map.includes('inicio'))wrn.push('Data de início em branco');
+    if(v.per&&!PER[v.per.toLowerCase()])err.push('Periodicidade desconhecida');
+    else if(v.per&&PER[v.per.toLowerCase()]!==v.per)wrn.push('Periodicidade normalizada: «'+v.per+'» → '+PER[v.per.toLowerCase()]);
+    if(v.valor&&!/^\d+([.,]\d+)?$/.test(v.valor.trim()))wrn.push('Valor com texto: «'+v.valor+'» → '+(parseFloat(v.valor)||'?'));
+    if(v.tel&&digits(v.tel).length===9){const k=digits(v.tel);if(seen[k]!==undefined){const o=ROWS[seen[k]];dup=(map.includes('nome')&&o[map.indexOf('nome')]===v.nome)?{t:'exato',l:seen[k]+1}:{t:'possivel',l:seen[k]+1}}else seen[k]=i}
+    return{i,v,err,wrn,dup};
+  });
+}
+function auto(r){if(r.err.length)return'ign';if(r.dup)return'ign';return'imp'}
+function steps(){document.getElementById('steps').innerHTML=['1 · Ficheiro','2 · Mapear colunas','3 · Rever e corrigir','4 · Confirmar'].map((s,i)=>`<div class="${i+1===step?'on':i+1<step?'done':''}">${s}</div>`).join('')}
+function render(){steps();const m=document.getElementById('main');
+ if(step===1)m.innerHTML=`<div class="drop"><div class="ic">📄</div><h3 style="margin:8px 0">Aqui o utilizador escolheria a folha Excel (.xlsx) ou CSV</h3><p style="color:var(--muted);margin:0 0 16px">Neste protótipo ainda não se lê ficheiros reais: usamos um exemplo com problemas típicos (duplicados, datas inválidas, telefones incompletos).</p><button class="btn primary" id="use">Usar ficheiro de exemplo: clientes_exemplo.xlsx</button></div>
+  <div class="card" style="margin-top:14px"><b>Como funciona</b><ol style="margin:6px 0 0 18px;color:var(--muted)"><li>Escolhe o ficheiro e confirma as colunas.</li><li>O sistema verifica formatos e procura duplicados <b>sem gravar nada</b>.</li><li>Corrige ou ignora as linhas com problemas e confirma.</li><li>Fica registada a origem e a data da importação, para rastrear.</li></ol></div>`;
+ if(step===2)m.innerHTML=`<div class="card"><h3 style="font-size:15px">Confirme onde vai cada coluna</h3><p style="color:var(--muted);margin:4px 0 10px">Sugerido automaticamente a partir dos cabeçalhos. Experimente mudar uma coluna e veja o efeito no passo seguinte.</p>
+  <table class="map"><thead><tr><th>Coluna no Excel</th><th>Exemplos</th><th>Campo na plataforma</th></tr></thead><tbody>${HEAD.map((h,c)=>`<tr><td><b>${h}</b></td><td class="sample">${ROWS.slice(0,3).map(r=>r[c]||'(vazio)').join(' · ')}</td><td><select data-c="${c}">${Object.entries(FIELDS).map(([k,v])=>`<option value="${k}" ${map[c]===k?'selected':''}>${v}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table>
+  <div style="display:flex;justify-content:space-between;margin-top:14px"><button class="btn" id="back">← Voltar</button><button class="btn primary" id="next">Verificar dados →</button></div></div>`;
+ if(step===3){
+  const V=validate();V.forEach(r=>{if(!(r.i in acts))acts[r.i]=auto(r)});
+  const ne=V.filter(r=>r.err.length).length,nd=V.filter(r=>!r.err.length&&r.dup).length,nw=V.filter(r=>!r.err.length&&!r.dup&&r.wrn.length).length,no=V.length-ne-nd-nw;
+  const imp=V.filter(r=>acts[r.i]==='imp').length;
+  m.innerHTML=`<div class="sum"><div><b>${V.length}</b><small>Linhas no ficheiro</small></div><div class="ok"><b>${no}</b><small>Sem problemas</small></div><div class="warn"><b>${nw}</b><small>Com avisos (corrigidos auto.)</small></div><div class="warn"><b>${nd}</b><small>Possíveis duplicados</small></div><div class="bad"><b>${ne}</b><small>Com erros</small></div></div>
+  <div class="card"><div class="bar"><b>Pré-visualização</b><span class="sp"></span><span style="color:var(--muted)">A importar: <b>${imp}</b> de ${V.length}</span></div>
+  <div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Nome</th><th>Telefone</th><th>Início</th><th>Periodicidade</th><th>Valor</th><th>Verificação</th><th>Ação</th></tr></thead><tbody>
+  ${V.map(r=>{const cls=r.err.length?'err':r.dup?'dup':r.wrn.length?'wrn':'';const a=acts[r.i];
+   return`<tr class="${cls} ${a==='ign'?'ign':''}"><td>${r.i+1}</td><td>${r.v.nome||'<i>(vazio)</i>'}</td><td>${r.v.tel||''}</td><td>${r.v.inicio??''}</td><td>${r.v.per||''}</td><td>${r.v.valor||''}</td>
+   <td class="msgs">${r.err.map(e=>`<span class="e">✕ ${e}</span>`).join('')}${r.dup?`<span class="w">⚠ ${r.dup.t==='exato'?'Duplicado exato':'Possível duplicado'} da linha ${r.dup.l}</span>`:''}${r.wrn.map(e=>`<span class="w">• ${e}</span>`).join('')}${!r.err.length&&!r.dup&&!r.wrn.length?'<span style="color:var(--ok)">✓ OK</span>':''}</td>
+   <td><select data-a="${r.i}" style="width:130px"><option value="imp" ${a==='imp'?'selected':''}>Importar</option><option value="ign" ${a==='ign'?'selected':''}>Ignorar</option></select></td></tr>`}).join('')}</tbody></table></div>
+  <div style="display:flex;justify-content:space-between;margin-top:14px"><button class="btn" id="back">← Voltar</button><button class="btn primary" id="next">Continuar →</button></div></div>`;
+ }
+ if(step===4){const V=validate();const imp=V.filter(r=>acts[r.i]==='imp'),withErr=imp.filter(r=>r.err.length).length;
+  m.innerHTML=`<div class="card"><h3 style="font-size:15px">Resumo antes de gravar</h3><table><tbody>
+   <tr><td>Ficheiro</td><td>clientes_exemplo.xlsx · folha «Clientes»</td></tr><tr><td>Clientes a criar</td><td><b>${imp.length}</b></td></tr><tr><td>Linhas ignoradas</td><td>${V.length-imp.length}</td></tr>
+   <tr><td>Linhas importadas com erros</td><td>${withErr?`<span class="badge bad">${withErr} — serão importadas incompletas</span>`:'0'}</td></tr><tr><td>Registo</td><td>Origem, data, utilizador e relatório ficam guardados para auditoria</td></tr></tbody></table>
+   <div style="display:flex;justify-content:space-between;margin-top:14px"><button class="btn" id="back">← Voltar</button><button class="btn primary" id="go">Gravar importação</button></div></div>`;}
+ if(step===5)m.innerHTML=`<div class="card fin"><div class="big">✅</div><h2>Importação concluída (simulada)</h2><p style="color:var(--muted)">${document.body.dataset.n} clientes criados. Pode descarregar o relatório com as linhas ignoradas para corrigir no Excel e voltar a importar.</p><button class="btn" id="rep">Descarregar relatório de erros</button> <button class="btn primary" id="again">Nova importação</button></div>`;
+ const on=(id,f)=>{const e=document.getElementById(id);if(e)e.onclick=f};
+ on('use',()=>{step=2;render()});on('back',()=>{step--;render()});
+ on('next',()=>{step++;render()});
+ on('go',()=>{document.body.dataset.n=validate().filter(r=>acts[r.i]==='imp').length;step=5;render()});
+ on('rep',()=>toast('Aqui descarregaria um ficheiro com as linhas ignoradas e o motivo'));
+ on('again',()=>{step=1;acts={};map=['nome','tel','email','morada','inicio','per','valor','obs'];render()});
+ document.querySelectorAll('select[data-c]').forEach(s=>s.onchange=()=>{map[+s.dataset.c]=s.value;acts={}});
+ document.querySelectorAll('select[data-a]').forEach(s=>s.onchange=()=>{acts[+s.dataset.a]=s.value;render()});
+}
+render();
+</script>
+</body>
+</html>

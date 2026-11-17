@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P6 · Perfis e permissões</title>
+<style>
+:root{
+  --ink:#1f2a37;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9;--card:#fff;
+  --accent:#1d6fa5;--accent-d:#155781;--accent-l:#e6f1f8;
+  --ok:#2e7d32;--ok-l:#e8f5e9;--warn:#b26a00;--warn-l:#fff4e0;--bad:#c62828;--bad-l:#fdecec;
+  --t-dom:#1d6fa5;--t-ger:#2e7d32;--t-sofa:#7b4bb7;--t-col:#00838f;--t-tap:#d9731a;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.proto-banner{background:#fff8e1;border-bottom:1px solid #f1dd9b;color:#7a5b00;text-align:center;padding:6px 12px;font-size:12px}
+.topbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:13px}
+.topbar h1{font-size:18px}
+.topbar .sub{color:var(--muted);font-size:13px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ink)}
+.btn:hover{background:#f1f4f8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.danger{color:var(--bad);border-color:#f2bcbc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:7px 14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.t-dom{background:var(--t-dom)}.t-ger{background:var(--t-ger)}.t-sofa{background:var(--t-sofa)}.t-col{background:var(--t-col)}.t-tap{background:var(--t-tap)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px}
+.badge.bad{background:var(--bad-l);color:var(--bad)}.badge.warn{background:var(--warn-l);color:var(--warn)}.badge.ok{background:var(--ok-l);color:var(--ok)}.badge.info{background:var(--accent-l);color:var(--accent)}
+.questions{margin-top:24px;border-left:4px solid var(--accent);background:var(--accent-l)}
+.questions h3{font-size:15px;margin-bottom:6px}
+.questions ul{margin:6px 0 0 18px;padding:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a37;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;z-index:50}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;z-index:40}
+.overlay.show{display:block}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;background:#fff;color:var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<style>
+.matrix td,.matrix th{text-align:center}
+.matrix td:first-child,.matrix th:first-child{text-align:left}
+.cell{display:inline-block;min-width:92px;padding:5px 8px;border-radius:8px;border:1px solid var(--line);cursor:pointer;font-size:12px;user-select:none}
+.cell.l0{background:#f3f4f6;color:#9aa3af}.cell.l1{background:var(--accent-l);color:var(--accent);border-color:#bcd9ec}.cell.l2{background:var(--warn-l);color:var(--warn);border-color:#f0d29b}.cell.l3{background:var(--ok-l);color:var(--ok);border-color:#bfe0c1}
+.cell small{display:block;font-size:10px;opacity:.8}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+.menu{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.menu div{padding:7px 10px;border-radius:8px;background:#f6f8fa;font-size:13px}
+.menu div.hid{opacity:.35;text-decoration:line-through}
+.rec .f{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.rec .f span:first-child{color:var(--muted)}
+.rec .f.hid span:last-child{background:repeating-linear-gradient(135deg,#eee,#eee 5px,#e3e3e3 5px,#e3e3e3 10px);color:transparent;border-radius:4px;min-width:90px;user-select:none}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;font-size:12px}
+.denied{background:var(--bad-l);color:var(--bad);border-radius:8px;padding:12px;margin-top:10px}
+.unit td b{font-variant-numeric:tabular-nums}
+.sw{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px}
+.sw input{width:auto}
+</style>
+</head>
+<body>
+<div class="proto-banner">Protótipo com dados fictícios · P6 Perfis e permissões</div>
+<div class="topbar"><a class="back" href="index.html">← Protótipos</a><h1>Perfis, permissões e separação por unidade</h1><span class="sub">Clique nas células para testar outras regras</span></div>
+<div class="wrap">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><h2 style="font-size:16px">Quem vê e faz o quê (proposta inicial)</h2><button class="btn sm" id="reset">Repor proposta</button></div>
+    <div class="legend"><span class="cell l0">Sem acesso</span><span class="cell l1">Ver</span><span class="cell l2">Ver e editar</span><span class="cell l3">Total</span></div>
+    <div style="overflow-x:auto"><table class="matrix" id="matrix"></table></div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2 style="font-size:16px;margin-bottom:8px">Pré-visualizar como…</h2>
+      <select id="role"></select>
+      <div style="font-size:12px;color:var(--muted);margin:10px 0 0">Menu que esta pessoa vê</div>
+      <div class="menu" id="menu"></div>
+      <div style="font-size:12px;color:var(--muted);margin:14px 0 4px">Ficha do cliente «Sra. Inês Costa» vista por este perfil</div>
+      <div class="rec" id="rec"></div>
+    </div>
+    <div class="card">
+      <h2 style="font-size:16px;margin-bottom:8px">Separação por unidade (franchising)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label>Utilizador</label><select id="who"><option value="admM">Administração · Montijo</option><option value="admS">Administração · Setúbal (franqueado)</option><option value="fran">Administração central (franchisador)</option></select></div>
+        <div><label>Tentar abrir a unidade</label><select id="unit"><option value="M">Montijo</option><option value="S">Setúbal</option></select></div>
+      </div>
+      <div id="unitOut"></div>
+      <label class="sw"><input type="checkbox" id="detail"> Contrato permite ao franchisador ver clientes e valores de cada unidade</label>
+    </div>
+  </div>
+
+  <div class="card questions">
+    <h3>Questões para validar com a Rede Clean</h3>
+    <ul>
+      <li>Quantos perfis existem hoje, e há pessoas que acumulam funções (ex.: administração que também faz telemarketing)?</li>
+      <li>A telemarketing pode ver o valor contratado? E o histórico de pagamentos?</li>
+      <li>As colaboradoras devem ver a morada completa e o contacto do cliente, ou só a morada do dia?</li>
+      <li>Quem pode corrigir horas registadas pelas colaboradoras? Quem aprova?</li>
+      <li>Em franchising: que indicadores vê a administração central (só agregados ou também clientes)? Isso depende do contrato de cada franqueado?</li>
+      <li>Quem do nosso lado (suporte técnico) pode aceder a dados de clientes? Sugerimos acesso excecional, justificado e registado.</li>
+    </ul>
+  </div>
+</div>
+<script>
+const ROLES=[['adm','Administração da unidade'],['com','Comercial / telemarketing'],['col','Colaboradora'],['fra','Admin. central (franchisador)']];
+const L=['Sem acesso','Ver','Ver e editar','Total'];
+// [área, [adm,com,col,fra], notas]
+const DEF=[
+ ['Clientes: ficha e contactos',[3,2,1,0],{col:'só clientes do dia',fra:'sem detalhe'}],
+ ['Valor contratado e preços',[3,0,0,1],{fra:'só se contrato'}],
+ ['Oportunidades e lembretes',[3,3,0,0],{}],
+ ['Agenda',[3,1,1,1],{col:'só a sua',fra:'agregada'}],
+ ['Horas e checklists',[3,0,2,1],{col:'só as suas',fra:'agregado'}],
+ ['Dados pessoais das colaboradoras',[3,0,1,0],{col:'só os seus'}],
+ ['Financeiro: receita e margem',[3,0,0,1],{fra:'só agregado'}],
+ ['Despesas e custos',[3,0,0,1],{fra:'só agregado'}],
+ ['Configurações e utilizadores',[3,0,0,0],{}],
+ ['Auditoria e histórico de alterações',[2,0,0,1],{fra:'só acessos'}]
+];
+let A=JSON.parse(JSON.stringify(DEF.map(d=>d[1])));
+function renderMatrix(){
+  document.getElementById('matrix').innerHTML=`<thead><tr><th>Área</th>${ROLES.map(r=>`<th>${r[1]}</th>`).join('')}</tr></thead><tbody>`+
+  DEF.map((d,i)=>`<tr><td>${d[0]}</td>${ROLES.map((r,j)=>`<td><span class="cell l${A[i][j]}" data-i="${i}" data-j="${j}">${L[A[i][j]]}${d[2][r[0]]&&A[i][j]?`<small>${d[2][r[0]]}</small>`:''}</span></td>`).join('')}</tr>`).join('')+'</tbody>';
+  document.querySelectorAll('.cell[data-i]').forEach(e=>e.onclick=()=>{const i=+e.dataset.i,j=+e.dataset.j;A[i][j]=(A[i][j]+1)%4;renderMatrix();renderPreview()});
+}
+function renderPreview(){
+  const j=+document.getElementById('role').value;
+  document.getElementById('menu').innerHTML=DEF.map((d,i)=>`<div class="${A[i][j]?'':'hid'}">${d[0]}${A[i][j]?' · '+L[A[i][j]].toLowerCase():''}</div>`).join('');
+  const f=(label,val,i)=>`<div class="f ${A[i][j]?'':'hid'}"><span>${label}</span><span>${val}</span></div>`;
+  document.getElementById('rec').innerHTML=
+    f('Nome','Inês Costa',0)+f('Telefone','912 000 101',0)+f('Morada','Rua do Exemplo 8, Montijo',0)+
+    f('Valor contratado','90 € por serviço',1)+f('Lembrete','Higienização de sofá · 10 dez',2)+
+    f('Pagamentos','90,00 € recebido (MB Way)',6)+f('Colaboradoras que atenderam','Ana, Carla',5);
+}
+function renderUnit(){
+  const who=document.getElementById('who').value,u=document.getElementById('unit').value,det=document.getElementById('detail').checked;
+  const own={admM:'M',admS:'S'}[who];const out=document.getElementById('unitOut');
+  const name={M:'Montijo',S:'Setúbal'}[u];
+  if(who==='fran'){
+    out.innerHTML=`<div style="margin-top:12px;font-size:13px">Painel de supervisão: <b>indicadores por unidade</b> (valores inventados)</div>
+    <table class="unit"><thead><tr><th>Unidade</th><th>Serviços/sem.</th><th>Receita</th><th>Margem</th></tr></thead><tbody><tr><td>Montijo</td><td><b>96</b></td><td><b>3.520 €</b></td><td><b>8,8%</b></td></tr><tr><td>Setúbal</td><td><b>41</b></td><td><b>1.480 €</b></td><td><b>6,1%</b></td></tr></tbody></table>
+    <div style="margin-top:10px;font-size:13px">${det?`<span class="badge ok">Detalhe permitido por contrato</span> Ao abrir ${name}, vê clientes e valores (consulta, ação registada).`:`<span class="badge info">Só agregados</span> Ao abrir ${name}, não vê nomes, moradas nem preços de clientes.`}</div>`;
+  }else if(own===u){
+    out.innerHTML=`<div style="margin-top:12px;font-size:13px"><span class="badge ok">Acesso à sua unidade</span> Vê clientes, agenda, equipa, despesas e relatórios de <b>${name}</b>.</div>`;
+  }else{
+    out.innerHTML=`<div class="denied"><b>Acesso negado</b><br>Este utilizador pertence a ${{M:'Setúbal',S:'Montijo'}[u]} e não tem permissão para abrir ${name}. O servidor recusa o pedido, mesmo que alguém tente aceder por ligação direta, pesquisa ou exportação. A tentativa fica registada.</div>`;
+  }
+}
+document.getElementById('role').innerHTML=ROLES.map((r,i)=>`<option value="${i}">${r[1]}</option>`).join('');
+['role'].forEach(id=>document.getElementById(id).onchange=renderPreview);
+['who','unit','detail'].forEach(id=>document.getElementById(id).onchange=renderUnit);
+document.getElementById('reset').onclick=()=>{A=JSON.parse(JSON.stringify(DEF.map(d=>d[1])));renderMatrix();renderPreview()};
+renderMatrix();renderPreview();renderUnit();
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Protótipos — Plataforma de gestão (Rede Clean)</title>
+<style>
+:root{
+  --ink:#1f2a37;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9;--card:#fff;
+  --accent:#1d6fa5;--accent-d:#155781;--accent-l:#e6f1f8;
+  --ok:#2e7d32;--ok-l:#e8f5e9;--warn:#b26a00;--warn-l:#fff4e0;--bad:#c62828;--bad-l:#fdecec;
+  --t-dom:#1d6fa5;--t-ger:#2e7d32;--t-sofa:#7b4bb7;--t-col:#00838f;--t-tap:#d9731a;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.proto-banner{background:#fff8e1;border-bottom:1px solid #f1dd9b;color:#7a5b00;text-align:center;padding:6px 12px;font-size:12px}
+.topbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:13px}
+.topbar h1{font-size:18px}
+.topbar .sub{color:var(--muted);font-size:13px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ink)}
+.btn:hover{background:#f1f4f8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.danger{color:var(--bad);border-color:#f2bcbc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:7px 14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.t-dom{background:var(--t-dom)}.t-ger{background:var(--t-ger)}.t-sofa{background:var(--t-sofa)}.t-col{background:var(--t-col)}.t-tap{background:var(--t-tap)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px}
+.badge.bad{background:var(--bad-l);color:var(--bad)}.badge.warn{background:var(--warn-l);color:var(--warn)}.badge.ok{background:var(--ok-l);color:var(--ok)}.badge.info{background:var(--accent-l);color:var(--accent)}
+.questions{margin-top:24px;border-left:4px solid var(--accent);background:var(--accent-l)}
+.questions h3{font-size:15px;margin-bottom:6px}
+.questions ul{margin:6px 0 0 18px;padding:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a37;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;z-index:50}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;z-index:40}
+.overlay.show{display:block}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;background:#fff;color:var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<style>
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:20px}
+.grid a{text-decoration:none;color:inherit}
+.grid .card{height:100%;transition:.15s}
+.grid .card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(29,111,165,.12)}
+.num{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.05em}
+.grid h2{font-size:17px;margin:4px 0 6px}
+.grid p{margin:0 0 8px;color:var(--muted)}
+.grid small{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="proto-banner">Protótipos com dados fictícios · Não são especificação, orçamento nem compromisso de funcionalidade</div>
+<div class="topbar"><h1>Plataforma de gestão — protótipos (rondas 1 a 3)</h1><span class="sub">Rascunho para validação</span></div>
+<div class="wrap">
+  <p style="max-width:760px">Sete jornadas para confirmar se interpretámos bem a operação. Em cada ecrã há uma caixa com as <b>questões</b> que queremos validar. Todos os nomes, valores e datas são inventados.</p>
+  <div class="grid">
+    <a href="p1-agenda.html"><div class="card"><div class="num">P1</div><h2>Agenda semanal</h2><p>Serviços recorrentes e pontuais, vista de semana, dia e mês, conflitos de horário e alteração de uma visita ou da série.</p><small>Computador</small></div></a>
+    <a href="p2-colaboradora-movel.html"><div class="card"><div class="num">P2</div><h2>Vista móvel da colaboradora</h2><p>Agenda do dia, início e fim do serviço, checklist, observações e envio para validação.</p><small>Telemóvel</small></div></a>
+    <a href="p3-fecho-diario.html"><div class="card"><div class="num">P3</div><h2>Fecho diário e rentabilidade</h2><p>Resultado do dia, pendências de recebimento, margem por serviço e evolução por período.</p><small>Computador</small></div></a>
+    <a href="p4-ficha-cliente.html"><div class="card"><div class="num">P4</div><h2>Ficha do cliente e lembretes</h2><p>Ficha, histórico, lembrete automático aos seis meses, mensagem preparada e revista antes de enviar, respeitando o consentimento.</p><small>Computador</small></div></a>
+    <a href="p5-importacao-excel.html"><div class="card"><div class="num">P5</div><h2>Importação de Excel</h2><p>Carregar a folha, mapear colunas, ver erros e duplicados antes de gravar.</p><small>Computador</small></div></a>
+    <a href="p6-perfis-permissoes.html"><div class="card"><div class="num">P6</div><h2>Perfis e permissões</h2><p>Quem vê o quê, pré-visualização por perfil e separação entre unidades de franchising.</p><small>Computador</small></div></a>
+    <a href="p7-multiunidade.html"><div class="card"><div class="num">P7</div><h2>Esquema multiunidade</h2><p>Diagrama de como a plataforma separa unidades de franchising, o que a central vê e quando cada parte é construída.</p><small>Diagrama</small></div></a>
+  </div>
+</div>
+</body>
+</html>

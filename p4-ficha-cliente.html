@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P4 · Ficha do cliente e lembretes</title>
+<style>
+:root{
+  --ink:#1f2a37;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9;--card:#fff;
+  --accent:#1d6fa5;--accent-d:#155781;--accent-l:#e6f1f8;
+  --ok:#2e7d32;--ok-l:#e8f5e9;--warn:#b26a00;--warn-l:#fff4e0;--bad:#c62828;--bad-l:#fdecec;
+  --t-dom:#1d6fa5;--t-ger:#2e7d32;--t-sofa:#7b4bb7;--t-col:#00838f;--t-tap:#d9731a;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.proto-banner{background:#fff8e1;border-bottom:1px solid #f1dd9b;color:#7a5b00;text-align:center;padding:6px 12px;font-size:12px}
+.topbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:13px}
+.topbar h1{font-size:18px}
+.topbar .sub{color:var(--muted);font-size:13px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ink)}
+.btn:hover{background:#f1f4f8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.danger{color:var(--bad);border-color:#f2bcbc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:7px 14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.t-dom{background:var(--t-dom)}.t-ger{background:var(--t-ger)}.t-sofa{background:var(--t-sofa)}.t-col{background:var(--t-col)}.t-tap{background:var(--t-tap)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px}
+.badge.bad{background:var(--bad-l);color:var(--bad)}.badge.warn{background:var(--warn-l);color:var(--warn)}.badge.ok{background:var(--ok-l);color:var(--ok)}.badge.info{background:var(--accent-l);color:var(--accent)}
+.questions{margin-top:24px;border-left:4px solid var(--accent);background:var(--accent-l)}
+.questions h3{font-size:15px;margin-bottom:6px}
+.questions ul{margin:6px 0 0 18px;padding:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a37;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;z-index:50}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;z-index:40}
+.overlay.show{display:block}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;background:#fff;color:var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<style>
+.layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.list .it{padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+.list .it:hover{background:#f6f9fc}
+.list .it.on{background:var(--accent-l)}
+.list .it b{display:block}
+.list .it small{color:var(--muted)}
+.list .tags{margin-top:4px;display:flex;gap:4px;flex-wrap:wrap}
+.hd{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.hd h2{font-size:20px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}
+.fld small{display:block;color:var(--muted);font-size:12px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:16px 0 12px}
+.tabs button{border:0;background:none;padding:8px 14px;color:var(--muted);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--accent);border-color:var(--accent);font-weight:600}
+.tl .e{display:grid;grid-template-columns:92px 110px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.tl .e span:first-child{color:var(--muted)}
+.rem{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:#fff;flex-wrap:wrap}
+.rem .sp{flex:1;min-width:180px}
+.rem small{color:var(--muted);display:block}
+.due-today{border-left:4px solid var(--bad)}.due-soon{border-left:4px solid var(--warn)}.due-late{border-left:4px solid var(--bad);background:var(--bad-l)}.due-ok{border-left:4px solid var(--line)}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;width:min(560px,94vw);max-height:92vh;overflow:auto;padding:20px;z-index:46;display:none}
+.modal.show{display:block}
+.bubble{background:#dcf8c6;border-radius:12px 12px 2px 12px;padding:10px 12px;white-space:pre-wrap;font-size:13px;margin-top:8px;max-width:420px}
+.steps{display:flex;gap:6px;margin:8px 0 12px;font-size:12px}
+.consent{padding:8px 10px;border-radius:8px;margin:10px 0;font-size:13px}
+.consent.ok{background:var(--ok-l);color:var(--ok)}.consent.no{background:var(--bad-l);color:var(--bad)}
+.opp{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="proto-banner">Protótipo com dados fictícios · P4 Ficha do cliente e lembretes · «Hoje» = 10 de dezembro de 2026</div>
+<div class="topbar"><a class="back" href="index.html">← Protótipos</a><h1>Clientes e acompanhamento comercial</h1>
+ <div class="seg" id="mode"><button data-m="cli" class="on">Clientes</button><button data-m="rem">Lembretes</button></div></div>
+<div class="wrap">
+  <div id="main"></div>
+  <div class="card questions">
+    <h3>Questões para validar com a Rede Clean</h3>
+    <ul>
+      <li>O lembrete dos seis meses vale para todos os serviços de higienização (sofá, colchão, tapete) ou o prazo varia?</li>
+      <li>Quem trata dos lembretes (telemarketing?) e que resultado de contacto quer registar (atendeu, agendou, não quer, sem resposta)?</li>
+      <li>Hoje, como guardam o consentimento para receberem mensagens? Querem que o sistema impeça o contacto sem consentimento?</li>
+      <li>Preferem enviar por WhatsApp, SMS ou email? A mensagem deve ser sempre revista antes de enviar?</li>
+      <li>Que campos do cliente são indispensáveis? O que falta nesta ficha (NIF para faturação, acessos, animais, preferências)?</li>
+      <li>Que dados comerciais deve a telemarketing ver, e o valor contratado deve estar escondido?</li>
+    </ul>
+  </div>
+</div>
+<div class="overlay" id="ov"></div>
+<div class="modal" id="modal"></div>
+<div class="toast" id="toast"></div>
+<script>
+const TODAY=new Date(2026,11,10);
+const MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const fd=d=>d.getDate()+' '+MES[d.getMonth()]+' '+d.getFullYear();
+const days=d=>Math.round((d-TODAY)/86400000);
+let C=[
+ {id:1,n:'Sra. Inês Costa',tipo:'Particular',tel:'912 000 101',email:'ines.exemplo@mail.test',addr:'Rua do Exemplo 8, Montijo',aniv:[1,12],consent:true,per:'Pontual',val:'90 € por serviço',ini:'10 jun 2026',
+  h:[['10 jun 2026','Serviço','Sofá 3 lugares · limpeza e impermeabilização · 2 colaboradoras'],['10 jun 2026','Pagamento','90,00 € recebido (MB Way)'],['12 jun 2026','Comunicação','Chamada de satisfação · cliente muito satisfeita']]},
+ {id:2,n:'Sr. Rui Matos',tipo:'Particular',tel:'913 000 202',email:'rui.exemplo@mail.test',addr:'Av. Teste 21, Alcochete',aniv:[3,7],consent:true,per:'Pontual',val:'55 € por serviço',ini:'15 jun 2026',
+  h:[['15 jun 2026','Serviço','Tapete 2x3 m · lavagem'],['15 jun 2026','Pagamento','55,00 € recebido (dinheiro)']]},
+ {id:3,n:'Sr. Tiago Brás',tipo:'Particular',tel:'914 000 303',email:'—',addr:'Rua Modelo 3, Seixal',aniv:[8,9],consent:true,per:'Pontual',val:'45 € por serviço',ini:'20 mai 2026',
+  h:[['20 mai 2026','Serviço','Colchão casal · higienização'],['20 mai 2026','Pagamento','45,00 € recebido'],['22 mai 2026','Ocorrência','Cliente pediu repetição da secagem · resolvido']]},
+ {id:4,n:'Dra. Helena Cruz',tipo:'Particular',tel:'915 000 404',email:'helena.exemplo@mail.test',addr:'Rua das Flores 12, Montijo',aniv:[12,12],consent:true,per:'Semanal · seg e qui',val:'54 € por visita',ini:'2 fev 2026',
+  h:[['10 dez 2026','Serviço','Limpeza doméstica · 3 h · Ana'],['10 dez 2026','Pagamento','Pendente · 54,00 € (a pagar por transferência)'],['26 nov 2026','Pagamento','54,00 € recebido']]},
+ {id:5,n:'Sr. Nuno Dias',tipo:'Particular',tel:'916 000 505',email:'nuno.exemplo@mail.test',addr:'Rua Fictícia 9, Setúbal',aniv:[5,4],consent:false,per:'Pontual',val:'70 € por serviço',ini:'10 jun 2026',
+  h:[['10 jun 2026','Serviço','Sofá 2 lugares · limpeza e impermeabilização'],['10 jun 2026','Pagamento','70,00 € recebido'],['11 jun 2026','Comunicação','Pediu para não receber campanhas']]},
+ {id:6,n:'Condomínio Jardim do Tejo',tipo:'Empresa',tel:'210 000 606',email:'adm.exemplo@condominio.test',addr:'Alameda Exemplo 100, Montijo',aniv:null,consent:true,per:'Semanal · seg e qua',val:'128 € por visita',ini:'1 set 2025',
+  h:[['7 dez 2026','Serviço','Limpeza de partes comuns · 4 h · 2 colaboradoras'],['7 dez 2026','Pagamento','Pendente · 128,00 € (30 dias)']]}
+];
+// lembretes
+let R=[
+ {id:1,cid:1,tipo:'6m',txt:'Higienização de sofá (feita em 10 jun 2026)',due:new Date(2026,11,10),st:'pendente',tpl:'6m',serv:'sofá'},
+ {id:2,cid:2,tipo:'6m',txt:'Lavagem de tapete (feita em 15 jun 2026)',due:new Date(2026,11,15),st:'pendente',tpl:'6m',serv:'tapete'},
+ {id:3,cid:3,tipo:'6m',txt:'Higienização de colchão (feita em 20 mai 2026)',due:new Date(2026,10,20),st:'pendente',tpl:'6m',serv:'colchão'},
+ {id:4,cid:4,tipo:'aniv',txt:'Aniversário · 12 dez',due:new Date(2026,11,12),st:'pendente',tpl:'aniv',serv:''},
+ {id:5,cid:5,tipo:'6m',txt:'Limpeza de sofá (feita em 10 jun 2026)',due:new Date(2026,11,10),st:'bloqueado',tpl:'6m',serv:'sofá'},
+ {id:6,cid:0,tipo:'natal',txt:'Campanha de Natal · todos os clientes com consentimento',due:new Date(2026,11,15),st:'pendente',tpl:'natal',serv:''}
+];
+const TPL={
+ '6m':'Olá {nome}! Faz agora seis meses que tratámos do seu {serv}. Para o manter limpo e saudável, recomendamos uma nova higienização. Quer que marquemos uma data? Esta semana temos disponibilidade. Obrigado, Rede Clean.',
+ 'aniv':'Olá {nome}! A equipa da Rede Clean deseja-lhe um feliz aniversário! 🎂 Obrigado pela confiança.',
+ 'natal':'Olá {nome}! A Rede Clean deseja-lhe um Feliz Natal e um excelente 2027. Em janeiro, tem um desconto na higienização de sofás e colchões — diga-nos se lhe interessa.'
+};
+let st={mode:'cli',sel:1,tab:'res'};
+const cl=id=>C.find(c=>c.id===id);
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+function dueInfo(r){const d=days(r.due);
+ if(r.st==='bloqueado')return['due-ok','Bloqueado: sem consentimento'];
+ if(r.st==='enviado')return['due-ok','Contactado'];
+ if(d<0)return['due-late','Atrasado '+(-d)+' dias'];
+ if(d===0)return['due-today','Hoje'];
+ if(d<=7)return['due-soon','Em '+d+' dias'];
+ return['due-ok','Em '+d+' dias'];}
+function cliRem(id){return R.filter(r=>r.cid===id)}
+function renderList(){
+  return `<div class="card list" style="padding:0"><div style="padding:10px 12px;border-bottom:1px solid var(--line)"><input placeholder="Pesquisar cliente…" disabled></div>`+
+  C.map(c=>{const rs=cliRem(c.id).filter(r=>r.st==='pendente');const late=rs.some(r=>days(r.due)<=0);
+   return `<div class="it ${c.id===st.sel?'on':''}" data-c="${c.id}"><b>${c.n}</b><small>${c.tipo} · ${c.per}</small><div class="tags">${late?'<span class="badge bad">Lembrete hoje/atrasado</span>':rs.length?'<span class="badge warn">Lembrete próximo</span>':''}${c.consent?'':'<span class="badge">Sem consentimento</span>'}</div></div>`}).join('')+`</div>`;
+}
+function renderDetail(){
+  const c=cl(st.sel);
+  let h=`<div class="card"><div class="hd"><div><h2>${c.n}</h2><span class="badge info">${c.tipo}</span> <span class="badge ${c.consent?'ok':'bad'}">${c.consent?'Consentimento de marketing: sim':'Consentimento de marketing: não'}</span></div>
+   <div><button class="btn" disabled>Editar</button> <button class="btn primary" disabled>+ Serviço</button></div></div>
+   <div class="tabs" id="tabs"><button data-t="res" class="${st.tab==='res'?'on':''}">Resumo</button><button data-t="his" class="${st.tab==='his'?'on':''}">Histórico</button><button data-t="com" class="${st.tab==='com'?'on':''}">Comercial</button></div>`;
+  if(st.tab==='res'){
+    h+=`<div class="grid2">
+     <div class="fld"><small>Telefone</small>${c.tel}</div><div class="fld"><small>Email</small>${c.email}</div>
+     <div class="fld"><small>Morada</small>${c.addr}</div><div class="fld"><small>Aniversário</small>${c.aniv?c.aniv[0]+' '+MES[c.aniv[1]-1]:'—'}</div>
+     <div class="fld"><small>Cliente desde</small>${c.ini}</div><div class="fld"><small>Periodicidade</small>${c.per}</div>
+     <div class="fld"><small>Valor contratado</small>${c.val}</div><div class="fld"><small>Origem</small>Recomendação (exemplo)</div></div>`;
+  }
+  if(st.tab==='his'){
+    h+=`<div class="tl">`+c.h.slice().sort(()=>0).map(e=>`<div class="e"><span>${e[0]}</span><span><span class="badge ${e[1]==='Pagamento'?'ok':e[1]==='Ocorrência'?'warn':'info'}">${e[1]}</span></span><span>${e[2]}</span></div>`).join('')+`</div>`;
+  }
+  if(st.tab==='com'){
+    const rs=cliRem(c.id);
+    h+=`<h3 style="font-size:14px;margin-bottom:8px">Lembretes e contactos</h3>`+(rs.length?rs.map(remRow).join(''):'<div style="color:var(--muted)">Sem lembretes pendentes.</div>')+
+    `<h3 style="font-size:14px;margin:16px 0 8px">Oportunidades</h3>
+     <div class="opp"><b>Higienização de colchão</b> <span class="badge info">Proposta enviada</span><br><small style="color:var(--muted)">Responsável: Telemarketing · próximo passo: ligar a 14 dez</small></div>`;
+  }
+  return h+`</div>`;
+}
+function remRow(r){
+  const[c,l]=dueInfo(r);const cli=r.cid?cl(r.cid):null;
+  return `<div class="rem ${c}"><div class="sp"><b>${cli?cli.n:'Todos os clientes'}</b><small>${r.txt}</small></div><span class="badge ${c==='due-late'||c==='due-today'?'bad':c==='due-soon'?'warn':''}">${l}</span><span class="badge info">${{pendente:'Por tratar',enviado:'Tratado',bloqueado:'Bloqueado'}[r.st]}</span>${r.st==='pendente'?`<button class="btn sm primary" data-prep="${r.id}">Preparar mensagem</button>`:''}</div>`;
+}
+function renderRem(){
+  const order=[...R].sort((a,b)=>a.due-b.due);
+  return `<div class="card"><h2 style="font-size:17px;margin-bottom:4px">Lembretes de acompanhamento</h2><p style="color:var(--muted);margin:0 0 12px">Gerados automaticamente a partir do tipo e da data do serviço. Nenhuma mensagem é enviada sem revisão por uma pessoa.</p>${order.map(remRow).join('')}</div>`;
+}
+function render(){
+  const m=document.getElementById('main');
+  m.innerHTML=st.mode==='cli'?`<div class="layout">${renderList()}${renderDetail()}</div>`:renderRem();
+  document.querySelectorAll('[data-c]').forEach(e=>e.onclick=()=>{st.sel=+e.dataset.c;st.tab='res';render()});
+  document.querySelectorAll('#tabs [data-t]').forEach(e=>e.onclick=()=>{st.tab=e.dataset.t;render()});
+  document.querySelectorAll('[data-prep]').forEach(e=>e.onclick=()=>openMsg(+e.dataset.prep));
+}
+function openMsg(id){
+  const r=R.find(x=>x.id===id);const c=r.cid?cl(r.cid):{n:'Maria',consent:true};
+  const nome=c.n.replace(/^(Sra\.|Sr\.|Dra\.|Dr\.)\s/,'');
+  const txt=TPL[r.tpl].replace('{nome}',c.n.split(' ').slice(0,2).join(' ')).replace('{serv}',r.serv);
+  const md=document.getElementById('modal');
+  md.innerHTML=`<div style="display:flex;justify-content:space-between"><h2 style="font-size:17px">Preparar mensagem · ${r.cid?c.n:'Campanha de Natal'}</h2><button class="btn sm" id="x">✕</button></div>
+   <div style="color:var(--muted);font-size:13px">${r.txt}</div>
+   <div class="consent ${c.consent?'ok':'no'}">${c.consent?'Consentimento de marketing registado em 12 mar 2026.':'Sem consentimento de marketing. O contacto está bloqueado por regra.'}</div>
+   <label>Canal</label><select id="canal"><option>WhatsApp</option><option>SMS</option><option>Email</option></select>
+   <label style="margin-top:10px">Mensagem (editável)</label><textarea id="msg" rows="5">${txt}</textarea>
+   <div style="font-size:12px;color:var(--muted);margin-top:4px">Variáveis preenchidas automaticamente: nome, serviço, data.</div>
+   <div class="bubble" id="bub">${txt}</div>
+   <label style="display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--ink);font-size:13px"><input type="checkbox" id="rev" style="width:auto" ${c.consent?'':'disabled'}> Revi a mensagem e confirmo o envio</label>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px">
+     <button class="btn" id="adiar">Adiar 15 dias</button>
+     <button class="btn danger" id="nao">Não contactar</button>
+     <button class="btn primary" id="env" disabled>Abrir no canal e registar</button></div>
+   <div style="font-size:12px;color:var(--muted);margin-top:8px">Nesta fase o sistema prepara o texto e abre o canal; o envio é feito pela pessoa. Envio automático em massa depende da API do WhatsApp, de custos e de consentimento.</div>`;
+  md.classList.add('show');document.getElementById('ov').classList.add('show');
+  const close=()=>{md.classList.remove('show');document.getElementById('ov').classList.remove('show')};
+  document.getElementById('x').onclick=close;document.getElementById('ov').onclick=close;
+  const msg=document.getElementById('msg'),rev=document.getElementById('rev'),env=document.getElementById('env');
+  msg.oninput=()=>document.getElementById('bub').textContent=msg.value;
+  rev.onchange=()=>env.disabled=!rev.checked;
+  env.onclick=()=>{r.st='enviado';if(r.cid)cl(r.cid).h.unshift([fd(TODAY),'Comunicação',document.getElementById('canal').value+' · lembrete enviado (revisto por Telemarketing)']);close();render();toast('Registado no histórico do cliente · resultado do contacto a atualizar quando responder')};
+  document.getElementById('adiar').onclick=()=>{r.due=new Date(r.due.getTime()+15*86400000);close();render();toast('Lembrete adiado para '+fd(r.due))};
+  document.getElementById('nao').onclick=()=>{r.st='bloqueado';close();render();toast('Cliente marcado como «não contactar» · motivo registado')};
+}
+document.getElementById('mode').onclick=e=>{const b=e.target.closest('button');if(!b)return;st.mode=b.dataset.m;[...e.currentTarget.children].forEach(x=>x.classList.toggle('on',x===b));render()};
+render();
+</script>
+</body>
+</html>
