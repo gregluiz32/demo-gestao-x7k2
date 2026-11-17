@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P8 · Painel comercial e funil</title>
+<style>
+:root{
+  --ink:#1f2a37;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9;--card:#fff;
+  --accent:#1d6fa5;--accent-d:#155781;--accent-l:#e6f1f8;
+  --ok:#2e7d32;--ok-l:#e8f5e9;--warn:#b26a00;--warn-l:#fff4e0;--bad:#c62828;--bad-l:#fdecec;
+  --t-dom:#1d6fa5;--t-ger:#2e7d32;--t-sofa:#7b4bb7;--t-col:#00838f;--t-tap:#d9731a;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.proto-banner{background:#fff8e1;border-bottom:1px solid #f1dd9b;color:#7a5b00;text-align:center;padding:6px 12px;font-size:12px}
+.topbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:13px}
+.topbar h1{font-size:18px}
+.topbar .sub{color:var(--muted);font-size:13px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ink)}
+.btn:hover{background:#f1f4f8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.danger{color:var(--bad);border-color:#f2bcbc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:7px 14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.t-dom{background:var(--t-dom)}.t-ger{background:var(--t-ger)}.t-sofa{background:var(--t-sofa)}.t-col{background:var(--t-col)}.t-tap{background:var(--t-tap)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px}
+.badge.bad{background:var(--bad-l);color:var(--bad)}.badge.warn{background:var(--warn-l);color:var(--warn)}.badge.ok{background:var(--ok-l);color:var(--ok)}.badge.info{background:var(--accent-l);color:var(--accent)}
+.questions{margin-top:24px;border-left:4px solid var(--accent);background:var(--accent-l)}
+.questions h3{font-size:15px;margin-bottom:6px}
+.questions ul{margin:6px 0 0 18px;padding:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a37;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;z-index:50}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;z-index:40}
+.overlay.show{display:block}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;background:#fff;color:var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<style>
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.tools .sp{flex:1}
+.tools select{width:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.kpi small{color:var(--muted);display:block;font-size:12px}
+.kpi b{font-size:22px;font-variant-numeric:tabular-nums}
+.kpi.pos b{color:var(--ok)}.kpi.warn b{color:var(--warn)}
+.main{display:grid;grid-template-columns:1fr 290px;gap:16px;align-items:start}
+@media(max-width:1000px){.main{grid-template-columns:1fr}}
+.board{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.colm{background:#eef2f6;border-radius:var(--r);padding:8px;min-height:360px}
+.colm.over{outline:2px dashed var(--accent);background:var(--accent-l)}
+.colm h3{font-size:13px;display:flex;justify-content:space-between;align-items:center;padding:4px 6px 8px}
+.colm h3 span{font-weight:400;color:var(--muted);font-size:12px}
+.opp{background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 10px;margin-bottom:8px;cursor:grab;font-size:13px}
+.opp:hover{box-shadow:0 2px 8px rgba(16,24,40,.12)}
+.opp.drag{opacity:.4}
+.opp b{display:block}
+.opp .m{color:var(--muted);font-size:12px;margin-top:2px}
+.opp .f{display:flex;justify-content:space-between;align-items:center;margin-top:6px;gap:6px;flex-wrap:wrap}
+.val{font-weight:700;font-variant-numeric:tabular-nums}
+.hid .val{background:repeating-linear-gradient(135deg,#eee,#eee 5px,#e3e3e3 5px,#e3e3e3 10px);color:transparent;border-radius:4px;min-width:50px;user-select:none}
+.task{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.task:last-child{border:0}
+.task input{width:auto;margin-top:3px}
+.task.done span{text-decoration:line-through;color:var(--muted)}
+.task small{display:block;color:var(--muted)}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(420px,100%);background:#fff;box-shadow:-8px 0 24px rgba(16,24,40,.18);padding:20px;overflow:auto;transform:translateX(100%);transition:.2s;z-index:45}
+.drawer.show{transform:none}
+.drawer h2{font-size:18px}
+.tl .e{display:grid;grid-template-columns:78px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.tl .e span:first-child{color:var(--muted)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bar{height:8px;border-radius:4px;background:#e4e7ec;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--accent)}
+.fun .r{display:flex;justify-content:space-between;font-size:13px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="proto-banner">Protótipo com dados fictícios · P8 Painel comercial e funil · «Hoje» = 10 de dezembro de 2026</div>
+<div class="topbar"><a class="back" href="index.html">← Protótipos</a><h1>Painel comercial</h1><span class="sub">Oportunidades, propostas e tarefas de acompanhamento</span></div>
+<div class="wrap">
+  <div class="tools">
+    <label style="display:flex;align-items:center;gap:6px;margin:0">Ver como:
+      <select id="perfil"><option value="adm">Administração</option><option value="tel">Telemarketing (sem valores)</option></select></label>
+    <label style="display:flex;align-items:center;gap:6px;margin:0">Responsável:
+      <select id="resp"><option value="">Todos</option><option>Telemarketing</option><option>Administração</option></select></label>
+    <span class="sp"></span>
+    <button class="btn primary" id="novo">+ Nova oportunidade</button>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="main">
+    <div>
+      <div class="board" id="board"></div>
+      <p style="font-size:12px;color:var(--muted);margin:8px 0 0">Arraste as oportunidades entre as colunas, ou abra uma para ver o histórico e registar contactos.</p>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px"><h3 style="font-size:14px;margin-bottom:6px">Tarefas de hoje</h3><div id="tasks"></div></div>
+      <div class="card fun"><h3 style="font-size:14px">Origem das oportunidades (mês)</h3><div id="orig"></div></div>
+    </div>
+  </div>
+
+  <div class="card questions">
+    <h3>Questões para validar com a Rede Clean</h3>
+    <ul>
+      <li>Que etapas tem hoje o vosso processo, do primeiro contacto à marcação do serviço? Estas cinco servem?</li>
+      <li>De onde vêm os pedidos (site, telefone, recomendação, lembretes aos seis meses) e quem os recebe?</li>
+      <li>Quem acompanha as propostas (administração, telemarketing) e que prazos de resposta seguem?</li>
+      <li>Quando uma oportunidade é ganha, o serviço deve passar logo para a agenda?</li>
+      <li>Querem registar o motivo quando se perde uma oportunidade? Que motivos são frequentes?</li>
+      <li>A telemarketing deve ver valores das propostas?</li>
+    </ul>
+  </div>
+</div>
+
+<div class="drawer" id="drawer"></div>
+<div class="overlay" id="ov"></div>
+<div class="toast" id="toast"></div>
+<script>
+const ST=['Novo pedido','Proposta enviada','Em negociação','Ganho','Perdido'];
+const ORIG=['Site','Telefone','Recomendação','Lembrete 6 meses','Campanha'];
+let O=[
+ {id:1,cl:'Sra. Teresa Antunes',sv:'Sofá 3 lugares + tapete',v:145,st:0,resp:'Telemarketing',og:'Site',prox:'Ligar hoje',h:[['10 dez','Pedido de orçamento pelo formulário do site']]},
+ {id:2,cl:'Residencial Sol Nascente',sv:'Limpezas gerais · alojamento local',v:480,st:0,resp:'Administração',og:'Recomendação',prox:'Visita a 14 dez',h:[['9 dez','Contacto por recomendação do Condomínio Jardim do Tejo']]},
+ {id:3,cl:'Sra. Inês Costa',sv:'Higienização de sofá (6 meses)',v:90,st:0,resp:'Telemarketing',og:'Lembrete 6 meses',prox:'Ligar hoje',h:[['10 dez','Lembrete automático gerado · serviço feito a 10 jun']]},
+ {id:4,cl:'Clínica Exemplo Saúde',sv:'Limpeza de estofos e cadeiras',v:320,st:1,resp:'Administração',og:'Telefone',prox:'Seguimento a 12 dez',h:[['4 dez','Proposta enviada por email'],['2 dez','Pedido por telefone']]},
+ {id:5,cl:'Escritório Exemplo Lda',sv:'Contrato mensal de limpeza',v:340,st:1,resp:'Administração',og:'Site',prox:'Ligar a 11 dez',h:[['3 dez','Proposta enviada'],['1 dez','Visita ao local']]},
+ {id:6,cl:'Sr. Rui Matos',sv:'Lavagem de tapete (6 meses)',v:55,st:1,resp:'Telemarketing',og:'Lembrete 6 meses',prox:'Ligar a 15 dez',h:[['8 dez','Mensagem preparada e enviada']]},
+ {id:7,cl:'Condomínio Jardim do Tejo',sv:'Contrato anual de limpeza das partes comuns',v:1550,st:2,resp:'Administração',og:'Recomendação',prox:'Reunião a 16 dez',h:[['7 dez','Pediu desconto no contrato anual'],['1 dez','Proposta enviada']]},
+ {id:8,cl:'Sr. Tiago Brás',sv:'Higienização de colchão (6 meses)',v:45,st:2,resp:'Telemarketing',og:'Lembrete 6 meses',prox:'Confirmar data',h:[['9 dez','Quer marcar para janeiro']]},
+ {id:9,cl:'AL Tejo Sul',sv:'Limpeza após cada estadia',v:960,st:3,resp:'Administração',og:'Telefone',prox:'Criar na agenda',h:[['5 dez','Proposta aceite']]},
+ {id:10,cl:'Dra. Helena Cruz',sv:'Higienização de colchões (2)',v:90,st:3,resp:'Telemarketing',og:'Campanha',prox:'Criar na agenda',h:[['6 dez','Aceitou a campanha de dezembro']]},
+ {id:11,cl:'Sr. Nuno Dias',sv:'Limpeza de estofos',v:70,st:4,resp:'Telemarketing',og:'Campanha',prox:'—',h:[['3 dez','Preferiu não avançar · preço']]}
+];
+let T=[
+ {t:'Ligar à Sra. Teresa Antunes (pedido do site)',s:'Telemarketing · 10:00',d:false},
+ {t:'Ligar à Sra. Inês Costa (lembrete 6 meses)',s:'Telemarketing · 11:00',d:false},
+ {t:'Enviar proposta ao Residencial Sol Nascente',s:'Administração · após visita',d:false},
+ {t:'Seguimento da proposta da Clínica Exemplo',s:'Administração · 12 dez',d:false},
+ {t:'Confirmar data do Sr. Tiago Brás',s:'Telemarketing · hoje',d:true}
+];
+let nid=100;
+const eur=x=>x.toLocaleString('pt-PT')+' €';
+const $=id=>document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200)}
+const vis=()=>O.filter(o=>!$('resp').value||o.resp===$('resp').value);
+const hide=()=>$('perfil').value==='tel';
+function kpis(){
+  const l=vis(),ab=l.filter(o=>o.st<3),g=l.filter(o=>o.st===3).length,p=l.filter(o=>o.st===4).length;
+  const tot=ab.reduce((a,o)=>a+o.v,0);
+  $('kpis').innerHTML=`<div class="kpi"><small>Oportunidades em aberto</small><b>${ab.length}</b></div>
+   <div class="kpi ${hide()?'hid':''}"><small>Valor potencial</small><b class="val">${hide()?'0.000 €':eur(tot)}</b></div>
+   <div class="kpi pos"><small>Ganhas este mês</small><b>${g}</b></div>
+   <div class="kpi"><small>Taxa de conversão</small><b>${g+p?Math.round(g/(g+p)*100):0}%</b></div>
+   <div class="kpi warn"><small>Tarefas de hoje por fazer</small><b>${T.filter(t=>!t.d).length}</b></div>`;
+}
+function board(){
+  const l=vis();
+  $('board').innerHTML=ST.map((s,i)=>{const it=l.filter(o=>o.st===i),tot=it.reduce((a,o)=>a+o.v,0);
+   return `<div class="colm" data-st="${i}"><h3>${s}<span>${it.length}${i<3?' · '+(hide()?'—':eur(tot)):''}</span></h3>${it.map(o=>`<div class="opp ${hide()?'hid':''}" draggable="true" data-id="${o.id}"><b>${o.cl}</b><div class="m">${o.sv}</div><div class="f"><span class="val">${eur(o.v)}</span><span class="badge ${o.og==='Lembrete 6 meses'?'info':o.og==='Campanha'?'warn':''}">${o.og}</span></div><div class="m" style="margin-top:6px">→ ${o.prox}</div></div>`).join('')}</div>`}).join('');
+  document.querySelectorAll('.opp').forEach(e=>{
+    e.ondragstart=ev=>{ev.dataTransfer.setData('text/plain',e.dataset.id);e.classList.add('drag')};
+    e.ondragend=()=>e.classList.remove('drag');
+    e.onclick=()=>openD(+e.dataset.id);
+  });
+  document.querySelectorAll('.colm').forEach(c=>{
+    c.ondragover=ev=>{ev.preventDefault();c.classList.add('over')};
+    c.ondragleave=()=>c.classList.remove('over');
+    c.ondrop=ev=>{ev.preventDefault();c.classList.remove('over');move(+ev.dataTransfer.getData('text/plain'),+c.dataset.st)};
+  });
+}
+function move(id,st){
+  const o=O.find(x=>x.id===id);if(!o||o.st===st)return;
+  o.st=st;o.h.unshift(['10 dez','Movida para «'+ST[st]+'»']);
+  if(st===3){o.prox='Criar na agenda';toast('Ganho! Sugestão: criar o serviço na agenda (P1) e agendar a primeira visita.')}
+  else if(st===4){o.prox='—';toast('Perdido: aqui pediria o motivo (preço, prazo, outro fornecedor…).')}
+  else toast('Movida para «'+ST[st]+'» · alteração registada');
+  render();
+}
+function tasks(){
+  $('tasks').innerHTML=T.map((t,i)=>`<label class="task ${t.d?'done':''}"><input type="checkbox" data-i="${i}" ${t.d?'checked':''}><span>${t.t}<small>${t.s}</small></span></label>`).join('');
+  document.querySelectorAll('#tasks input').forEach(c=>c.onchange=()=>{T[+c.dataset.i].d=c.checked;render()});
+}
+function orig(){
+  const l=vis(),m=Math.max(1,...ORIG.map(g=>l.filter(o=>o.og===g).length));
+  $('orig').innerHTML=ORIG.map(g=>{const n=l.filter(o=>o.og===g).length;return `<div class="r"><span>${g}</span><b>${n}</b></div><div class="bar"><i style="width:${n/m*100}%"></i></div>`}).join('');
+}
+function openD(id){
+  const o=O.find(x=>x.id===id),d=$('drawer');
+  d.innerHTML=`<div style="display:flex;justify-content:space-between"><h2>${o.cl}</h2><button class="btn sm" id="x">✕</button></div>
+   <div style="margin:4px 0 10px"><span class="badge info">${ST[o.st]}</span> <span class="badge">${o.og}</span> <span class="badge">${o.resp}</span></div>
+   <div class="${hide()?'hid':''}" style="font-size:13px">${o.sv} · <span class="val">${eur(o.v)}</span></div>
+   <div class="row2" style="margin-top:12px"><div><label>Etapa</label><select id="et">${ST.map((s,i)=>`<option value="${i}" ${i===o.st?'selected':''}>${s}</option>`).join('')}</select></div>
+   <div><label>Responsável</label><select id="rs"><option ${o.resp==='Telemarketing'?'selected':''}>Telemarketing</option><option ${o.resp==='Administração'?'selected':''}>Administração</option></select></div></div>
+   <div style="margin-top:10px"><label>Próximo passo</label><input id="px" value="${o.prox}"></div>
+   <div style="margin-top:10px"><label>Registar contacto</label><textarea id="nt" rows="2" placeholder="Ex.: ligou, pediu orçamento atualizado"></textarea><div style="text-align:right;margin-top:6px"><button class="btn primary sm" id="reg">Registar</button></div></div>
+   <h3 style="font-size:14px;margin:14px 0 4px">Histórico</h3><div class="tl">${o.h.map(e=>`<div class="e"><span>${e[0]}</span><span>${e[1]}</span></div>`).join('')}</div>`;
+  d.classList.add('show');$('ov').classList.add('show');
+  const c=()=>{d.classList.remove('show');$('ov').classList.remove('show')};
+  $('x').onclick=c;$('ov').onclick=c;
+  $('et').onchange=()=>{move(o.id,+$('et').value);c()};
+  $('rs').onchange=()=>{o.resp=$('rs').value;toast('Responsável alterado para '+o.resp);render()};
+  $('px').onchange=()=>{o.prox=$('px').value;render()};
+  $('reg').onclick=()=>{if(!$('nt').value.trim())return;o.h.unshift(['10 dez',$('nt').value.trim()]);c();render();toast('Contacto registado no histórico da oportunidade e do cliente')};
+}
+$('novo').onclick=()=>{const n=prompt('Nome do cliente ou empresa:');if(!n)return;O.unshift({id:nid++,cl:n,sv:'A definir',v:0,st:0,resp:'Telemarketing',og:'Telefone',prox:'Qualificar o pedido',h:[['10 dez','Oportunidade criada manualmente']]});render();toast('Oportunidade criada em «Novo pedido»')};
+$('perfil').onchange=render;$('resp').onchange=render;
+function render(){kpis();board();tasks();orig()}
+render();
+</script>
+</body>
+</html>

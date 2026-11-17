@@ -52,7 +52,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 </style>
 <style>
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:12px}
 .grid a{text-decoration:none;color:inherit}
 .grid .card{height:100%;transition:.15s}
 .grid .card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(29,111,165,.12)}
@@ -60,22 +60,32 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .grid h2{font-size:17px;margin:4px 0 6px}
 .grid p{margin:0 0 8px;color:var(--muted)}
 .grid small{color:var(--muted)}
+.grp{margin-top:28px}
+.grp h3{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.grp.crm h3{color:var(--accent)}
 </style>
 </head>
 <body>
 <div class="proto-banner">Protótipos com dados fictícios · Não são especificação, orçamento nem compromisso de funcionalidade</div>
-<div class="topbar"><h1>Plataforma de gestão — protótipos (rondas 1 a 3)</h1><span class="sub">Rascunho para validação</span></div>
+<div class="topbar"><h1>Plataforma de gestão — protótipos</h1><span class="sub">Rascunho para validação</span></div>
 <div class="wrap">
-  <p style="max-width:760px">Sete jornadas para confirmar se interpretámos bem a operação. Em cada ecrã há uma caixa com as <b>questões</b> que queremos validar. Todos os nomes, valores e datas são inventados.</p>
-  <div class="grid">
-    <a href="p1-agenda.html"><div class="card"><div class="num">P1</div><h2>Agenda semanal</h2><p>Serviços recorrentes e pontuais, vista de semana, dia e mês, conflitos de horário e alteração de uma visita ou da série.</p><small>Computador</small></div></a>
-    <a href="p2-colaboradora-movel.html"><div class="card"><div class="num">P2</div><h2>Vista móvel da colaboradora</h2><p>Agenda do dia, início e fim do serviço, checklist, observações e envio para validação.</p><small>Telemóvel</small></div></a>
-    <a href="p3-fecho-diario.html"><div class="card"><div class="num">P3</div><h2>Fecho diário e rentabilidade</h2><p>Resultado do dia, pendências de recebimento, margem por serviço e evolução por período.</p><small>Computador</small></div></a>
-    <a href="p4-ficha-cliente.html"><div class="card"><div class="num">P4</div><h2>Ficha do cliente e lembretes</h2><p>Ficha, histórico, lembrete automático aos seis meses, mensagem preparada e revista antes de enviar, respeitando o consentimento.</p><small>Computador</small></div></a>
+  <p style="max-width:780px">Dez ecrãs para confirmar se interpretámos bem a vossa operação, organizados em três áreas. Em cada ecrã há uma caixa com as <b>questões</b> que queremos validar. Todos os nomes, valores e datas são inventados.</p>
+  <div class="grp crm"><h3>CRM e relação com o cliente</h3><div class="grid">
+    <a href="p8-painel-comercial.html"><div class="card"><div class="num">P8</div><h2>Painel comercial e funil</h2><p>Oportunidades e propostas por etapa, tarefas do dia e origem dos pedidos. Arraste uma oportunidade de etapa em etapa.</p><small>Computador</small></div></a>
+    <a href="p9-telemarketing.html"><div class="card"><div class="num">P9</div><h2>Posto da telemarketing</h2><p>Lista de contactos do dia, ficha resumida, guião da chamada e registo do resultado, sem ver valores.</p><small>Computador</small></div></a>
+    <a href="p10-campanhas.html"><div class="card"><div class="num">P10</div><h2>Campanhas e lembretes</h2><p>Seis meses após a higienização, aniversários e Natal: quem entra, mensagem preparada e lista para contactar.</p><small>Computador</small></div></a>
+    <a href="p4-ficha-cliente.html"><div class="card"><div class="num">P4</div><h2>Ficha do cliente e lembretes</h2><p>Ficha, histórico de serviços, pagamentos e comunicações, com lembretes e mensagem revista antes de enviar.</p><small>Computador</small></div></a>
+  </div></div>
+  <div class="grp"><h3>Operação</h3><div class="grid">
+    <a href="p1-agenda.html"><div class="card"><div class="num">P1</div><h2>Agenda semanal</h2><p>Serviços recorrentes e pontuais, conflitos de horário e alteração de uma visita ou da série.</p><small>Computador</small></div></a>
+    <a href="p2-colaboradora-movel.html"><div class="card"><div class="num">P2</div><h2>Vista móvel da colaboradora</h2><p>Agenda do dia, início e fim do serviço, checklist e envio para validação.</p><small>Telemóvel</small></div></a>
+  </div></div>
+  <div class="grp"><h3>Gestão e preparação para crescer</h3><div class="grid">
+    <a href="p3-fecho-diario.html"><div class="card"><div class="num">P3</div><h2>Fecho diário e rentabilidade</h2><p>Resultado do dia, pendências, margem por serviço e evolução por período.</p><small>Computador</small></div></a>
     <a href="p5-importacao-excel.html"><div class="card"><div class="num">P5</div><h2>Importação de Excel</h2><p>Carregar a folha, mapear colunas, ver erros e duplicados antes de gravar.</p><small>Computador</small></div></a>
-    <a href="p6-perfis-permissoes.html"><div class="card"><div class="num">P6</div><h2>Perfis e permissões</h2><p>Quem vê o quê, pré-visualização por perfil e separação entre unidades de franchising.</p><small>Computador</small></div></a>
-    <a href="p7-multiunidade.html"><div class="card"><div class="num">P7</div><h2>Esquema multiunidade</h2><p>Diagrama de como a plataforma separa unidades de franchising, o que a central vê e quando cada parte é construída.</p><small>Diagrama</small></div></a>
-  </div>
+    <a href="p6-perfis-permissoes.html"><div class="card"><div class="num">P6</div><h2>Perfis e permissões</h2><p>Quem vê o quê, pré-visualização por perfil e separação entre unidades.</p><small>Computador</small></div></a>
+    <a href="p7-multiunidade.html"><div class="card"><div class="num">P7</div><h2>Esquema multiunidade</h2><p>Como a plataforma se prepara para franchising e o que a central vê.</p><small>Diagrama</small></div></a>
+  </div></div>
 </div>
 </body>
 </html>

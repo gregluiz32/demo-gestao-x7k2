@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P10 · Campanhas e lembretes</title>
+<style>
+:root{
+  --ink:#1f2a37;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9;--card:#fff;
+  --accent:#1d6fa5;--accent-d:#155781;--accent-l:#e6f1f8;
+  --ok:#2e7d32;--ok-l:#e8f5e9;--warn:#b26a00;--warn-l:#fff4e0;--bad:#c62828;--bad-l:#fdecec;
+  --t-dom:#1d6fa5;--t-ger:#2e7d32;--t-sofa:#7b4bb7;--t-col:#00838f;--t-tap:#d9731a;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.proto-banner{background:#fff8e1;border-bottom:1px solid #f1dd9b;color:#7a5b00;text-align:center;padding:6px 12px;font-size:12px}
+.topbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:13px}
+.topbar h1{font-size:18px}
+.topbar .sub{color:var(--muted);font-size:13px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ink)}
+.btn:hover{background:#f1f4f8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.danger{color:var(--bad);border-color:#f2bcbc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:7px 14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.t-dom{background:var(--t-dom)}.t-ger{background:var(--t-ger)}.t-sofa{background:var(--t-sofa)}.t-col{background:var(--t-col)}.t-tap{background:var(--t-tap)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px}
+.badge.bad{background:var(--bad-l);color:var(--bad)}.badge.warn{background:var(--warn-l);color:var(--warn)}.badge.ok{background:var(--ok-l);color:var(--ok)}.badge.info{background:var(--accent-l);color:var(--accent)}
+.questions{margin-top:24px;border-left:4px solid var(--accent);background:var(--accent-l)}
+.questions h3{font-size:15px;margin-bottom:6px}
+.questions ul{margin:6px 0 0 18px;padding:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a37;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;z-index:50}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;z-index:40}
+.overlay.show{display:block}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;background:#fff;color:var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<style>
+.layout{display:grid;grid-template-columns:310px 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.camp{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.camp:hover{border-color:var(--accent)}.camp.on{border-color:var(--accent);background:var(--accent-l)}
+.camp b{display:block}.camp small{color:var(--muted)}
+.camp .n{float:right;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.sw{display:flex;align-items:center;gap:8px}.sw input{width:auto}
+.sec{margin-top:16px}
+.sec h3{font-size:14px;margin-bottom:6px}
+.fun{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.fun div{background:#f6f8fa;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.fun small{display:block;color:var(--muted);font-size:12px}.fun b{font-size:22px;font-variant-numeric:tabular-nums}
+.fun .minus b{color:var(--bad)}.fun .tot{background:var(--ok-l);border-color:#bfe0c1}.fun .tot b{color:var(--ok)}
+.bubble{background:#dcf8c6;border-radius:12px 12px 2px 12px;padding:10px 12px;white-space:pre-wrap;font-size:13px;max-width:440px}
+.chips span{display:inline-block;background:var(--accent-l);color:var(--accent);border-radius:999px;padding:2px 10px;font-size:12px;margin:0 6px 6px 0;cursor:pointer}
+.modes label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;color:var(--ink);cursor:pointer}
+.modes label.dis{opacity:.55;cursor:not-allowed;background:#f6f8fa}
+.modes input{width:auto;margin-top:3px}
+.modes small{display:block;color:var(--muted)}
+.sample{font-size:12px;color:var(--muted);margin-top:6px}
+.lst td,.lst th{font-size:12px;padding:6px 8px}
+</style>
+</head>
+<body>
+<div class="proto-banner">Protótipo com dados fictícios · P10 Campanhas e lembretes · «Hoje» = 10 de dezembro de 2026 · base de 120 clientes inventados</div>
+<div class="topbar"><a class="back" href="index.html">← Protótipos</a><h1>Campanhas e lembretes automáticos</h1><span class="sub">O sistema encontra os clientes certos; as pessoas decidem e enviam</span></div>
+<div class="wrap">
+  <div class="layout">
+    <div id="camps"></div>
+    <div class="card" id="cfg"></div>
+  </div>
+  <div class="card questions">
+    <h3>Questões para validar com a Rede Clean</h3>
+    <ul>
+      <li>Para cada tipo de serviço (sofá, colchão, tapete), o intervalo de seis meses é o correto? Varia por serviço?</li>
+      <li>Que datas comemorativas e campanhas fazem hoje (aniversário, Natal, outras)? Há ofertas ou descontos associados?</li>
+      <li>Querem sempre rever a mensagem antes de sair, ou há mensagens que podem seguir automaticamente?</li>
+      <li>Que canal preferem (WhatsApp, SMS, email, chamada)? Têm hoje número de WhatsApp Business?</li>
+      <li>Como recolhem hoje o consentimento dos clientes para contactos de marketing? Está registado por cliente?</li>
+      <li>Que resultados querem medir (contactos, respostas, marcações) e com que periodicidade?</li>
+    </ul>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3400)}
+// base fictícia determinística
+let seed=7;const rnd=()=>(seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff;
+const NM=['Ana','Rui','Marta','Paulo','Inês','Tiago','Helena','Nuno','Rita','Luís','Sofia','Pedro','Teresa','João','Carla','Bruno'];
+const AP=['Costa','Matos','Neves','Ramos','Brás','Cruz','Dias','Faria','Santos','Almeida','Reis','Pinto','Lopes','Gomes'];
+const TIPO=['Sofá','Colchão','Tapete','Doméstica'];
+const C=[];for(let i=1;i<=120;i++){const t=TIPO[Math.floor(rnd()*4)];C.push({id:i,n:NM[Math.floor(rnd()*16)]+' '+AP[Math.floor(rnd()*14)],t,dias:Math.floor(20+rnd()*520),cons:rnd()>0.12,rec:rnd()<0.1,bm:1+Math.floor(rnd()*12),bd:1+Math.floor(rnd()*28)});}
+const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const HOJE=new Date(2026,11,10);
+function diasAteAniv(c){const a=new Date(2026,c.bm-1,c.bd);if(a<HOJE)a.setFullYear(2027);return Math.round((a-HOJE)/86400000)}
+const CP=[
+ {id:'6m',nome:'Higienização após seis meses',tipo:'Lembrete automático',p:6,min:3,max:12,un:'meses desde o serviço',filtro:t=>t!=='Doméstica',seg:(c,p)=>c.dias>=p*30&&c.dias<p*30+30,
+  msg:'Olá {nome}! Faz agora {meses} meses que tratámos do seu {serviço}. Para o manter limpo e saudável, recomendamos uma nova higienização. Quer que marquemos uma data? Obrigado, Rede Clean.'},
+ {id:'an',nome:'Aniversários',tipo:'Lembrete automático',p:14,min:1,max:30,un:'dias de antecedência',filtro:()=>true,seg:(c,p)=>diasAteAniv(c)<=p,
+  msg:'Olá {nome}! A equipa da Rede Clean deseja-lhe um feliz aniversário! 🎂 Obrigado pela confiança.'},
+ {id:'nt',nome:'Natal 2026',tipo:'Campanha',p:0,min:0,max:0,un:'',filtro:()=>true,seg:()=>true,
+  msg:'Olá {nome}! A Rede Clean deseja-lhe um Feliz Natal e um excelente 2027. Em janeiro, tem um desconto na higienização de sofás e colchões. Diga-nos se lhe interessa.'},
+ {id:'in',nome:'Clientes inativos',tipo:'Reativação',p:12,min:6,max:24,un:'meses sem serviço',filtro:()=>true,seg:(c,p)=>c.dias>p*30,
+  msg:'Olá {nome}! Já passou algum tempo desde o último serviço. Temos disponibilidade esta semana e uma condição especial para clientes de regresso. Quer saber mais?'}
+];
+const estado={};CP.forEach(c=>estado[c.id]={p:c.p,msg:c.msg,lista:0,modo:'rev'});
+let sel='6m';
+function calc(c){
+  const e=estado[c.id];
+  const seg=C.filter(x=>c.filtro(x.t)&&c.seg(x,e.p));
+  const sem=seg.filter(x=>!x.cons),rest=seg.filter(x=>x.cons);
+  const rec=rest.filter(x=>x.rec),ok=rest.filter(x=>!x.rec);
+  return{seg,sem,rec,ok};
+}
+function lista(){
+  $('camps').innerHTML=CP.map(c=>{const r=calc(c);return `<div class="camp ${c.id===sel?'on':''}" data-id="${c.id}"><span class="n">${r.ok.length}</span><b>${c.nome}</b><small>${c.tipo}${estado[c.id].lista?' · lista gerada':''}</small></div>`}).join('')+
+  `<div style="font-size:12px;color:var(--muted)">O número é a quantidade de clientes a contactar, depois de retirar quem não tem consentimento e quem já foi contactado nos últimos 30 dias.</div>`;
+  document.querySelectorAll('.camp').forEach(e=>e.onclick=()=>{sel=e.dataset.id;render()});
+}
+function cfg(){
+  const c=CP.find(x=>x.id===sel),e=estado[c.id];
+  $('cfg').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><h2 style="font-size:18px">${c.nome}</h2><span class="badge info">${c.tipo}</span></div>
+  <div class="sec"><h3>1 · Quem entra</h3>
+   ${c.max?`<label>Regra: ${c.un}</label><div class="sw"><input type="range" id="rg" min="${c.min}" max="${c.max}" value="${e.p}"><b id="rv" style="min-width:40px">${e.p}</b></div>`:'<div style="color:var(--muted);font-size:13px">Todos os clientes com consentimento de marketing.</div>'}
+   <div id="d1"></div></div>
+  <div class="sec"><h3>2 · Mensagem</h3>
+   <div class="chips">${['{nome}','{meses}','{serviço}'].map(v=>`<span data-v="${v}">${v}</span>`).join('')}</div>
+   <textarea id="msg" rows="4">${e.msg}</textarea>
+   <div style="margin-top:10px;font-size:12px;color:var(--muted)" id="pvl"></div><div class="bubble" id="bub"></div></div>
+  <div class="sec"><h3>3 · Como segue</h3><div class="modes">
+   <label><input type="radio" name="modo" value="rev" checked><span><b>Preparar para revisão</b><small>Cria a lista e as mensagens. A telemarketing revê e envia ou liga. Recomendado no arranque.</small></span></label>
+   <label class="dis"><input type="radio" name="modo" disabled><span><b>Envio automático por WhatsApp</b><small>Depende da API oficial, de modelos aprovados, de custos e de consentimento registado. A avaliar numa fase posterior.</small></span></label></div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn primary" id="gen"></button><button class="btn" id="exp">Exportar lista</button></div>
+  <div class="sec"><h3>Resultados desta campanha (exemplo de ciclos anteriores)</h3><div class="fun" id="d4"></div></div>`;
+  if($('rg'))$('rg').oninput=()=>{e.p=+$('rg').value;$('rv').textContent=e.p;fill();lista()};
+  $('msg').oninput=()=>{e.msg=$('msg').value;fill(true)};
+  document.querySelectorAll('.chips span').forEach(s=>s.onclick=()=>{const m=$('msg');m.value+=' '+s.dataset.v;m.oninput()});
+  $('gen').onclick=()=>{const r=calc(c);e.lista=r.ok.length;toast(r.ok.length+' contactos adicionados à lista de chamadas da telemarketing (P9), com a mensagem preparada.');lista()};
+  $('exp').onclick=()=>toast('Em produção: exportaria a lista para Excel ou PDF');
+  fill();
+}
+function fill(soMsg){
+  const c=CP.find(x=>x.id===sel),e=estado[c.id],r=calc(c);
+  const ex=r.ok[0]||{n:'Maria Costa',t:'Sofá',dias:182};
+  $('pvl').textContent='Pré-visualização para '+ex.n+':';
+  $('bub').textContent=e.msg.replace('{nome}',ex.n.split(' ')[0]).replace('{meses}',Math.round(ex.dias/30)).replace('{serviço}',ex.t.toLowerCase());
+  if(soMsg)return;
+  $('d1').innerHTML=`<div class="fun" style="margin-top:12px"><div><small>Clientes que cumprem a regra</small><b>${r.seg.length}</b></div><div class="minus"><small>Sem consentimento</small><b>−${r.sem.length}</b></div><div class="minus"><small>Contactados há menos de 30 dias</small><b>−${r.rec.length}</b></div><div class="tot"><small>A contactar</small><b>${r.ok.length}</b></div></div>`+
+   (r.ok.length?`<div class="sample">Exemplos: ${r.ok.slice(0,4).map(x=>x.n+' ('+x.t.toLowerCase()+')').join(' · ')}…</div>`:'<div class="sample">Nenhum cliente cumpre esta regra.</div>');
+  $('gen').textContent='Gerar lista para a telemarketing ('+r.ok.length+')';$('gen').disabled=!r.ok.length;
+  $('d4').innerHTML=`<div><small>Preparadas</small><b>${40+r.ok.length}</b></div><div><small>Contactadas</small><b>${34+Math.round(r.ok.length*0.9)}</b></div><div><small>Responderam</small><b>${15+Math.round(r.ok.length*0.4)}</b></div><div class="tot"><small>Marcaram</small><b>${8+Math.round(r.ok.length*0.25)}</b></div>`;
+}
+function render(){lista();cfg()}
+render();
+</script>
+</body>
+</html>

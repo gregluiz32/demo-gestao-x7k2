@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P9 · Posto da telemarketing</title>
+<style>
+:root{
+  --ink:#1f2a37;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9;--card:#fff;
+  --accent:#1d6fa5;--accent-d:#155781;--accent-l:#e6f1f8;
+  --ok:#2e7d32;--ok-l:#e8f5e9;--warn:#b26a00;--warn-l:#fff4e0;--bad:#c62828;--bad-l:#fdecec;
+  --t-dom:#1d6fa5;--t-ger:#2e7d32;--t-sofa:#7b4bb7;--t-col:#00838f;--t-tap:#d9731a;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.proto-banner{background:#fff8e1;border-bottom:1px solid #f1dd9b;color:#7a5b00;text-align:center;padding:6px 12px;font-size:12px}
+.topbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:13px}
+.topbar h1{font-size:18px}
+.topbar .sub{color:var(--muted);font-size:13px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ink)}
+.btn:hover{background:#f1f4f8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.danger{color:var(--bad);border-color:#f2bcbc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:7px 14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.t-dom{background:var(--t-dom)}.t-ger{background:var(--t-ger)}.t-sofa{background:var(--t-sofa)}.t-col{background:var(--t-col)}.t-tap{background:var(--t-tap)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px}
+.badge.bad{background:var(--bad-l);color:var(--bad)}.badge.warn{background:var(--warn-l);color:var(--warn)}.badge.ok{background:var(--ok-l);color:var(--ok)}.badge.info{background:var(--accent-l);color:var(--accent)}
+.questions{margin-top:24px;border-left:4px solid var(--accent);background:var(--accent-l)}
+.questions h3{font-size:15px;margin-bottom:6px}
+.questions ul{margin:6px 0 0 18px;padding:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a37;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;z-index:50}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;z-index:40}
+.overlay.show{display:block}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;background:#fff;color:var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<style>
+.perfil{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--accent-l);color:var(--accent);border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:13px}
+.perfil .sp{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.kpi small{color:var(--muted);display:block;font-size:12px}
+.kpi b{font-size:22px;font-variant-numeric:tabular-nums}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.q .it{padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.q .it:hover{background:#f6f9fc}.q .it.on{background:var(--accent-l)}
+.q .it.fin{opacity:.55}
+.q .it b{display:block;font-size:14px}.q .it small{color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:none;background:var(--line)}
+.dot.p{background:var(--warn)}.dot.ok{background:var(--ok)}.dot.no{background:var(--bad)}.dot.w{background:var(--accent)}
+.hd{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.hd h2{font-size:20px}
+.callbtn{display:inline-flex;align-items:center;gap:8px;background:var(--ok);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:700;font-size:15px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0}
+.fld small{display:block;color:var(--muted);font-size:12px}
+.script{background:#f6f8fa;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.55}
+.script mark{background:#fff3c4;border-radius:3px;padding:0 3px}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin-top:8px}
+.res button{text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.res button:hover{border-color:var(--accent);background:var(--accent-l)}
+.res button b{display:block;font-size:13px}.res button small{color:var(--muted)}
+.mini .e{display:grid;grid-template-columns:78px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+.mini .e span:first-child{color:var(--muted)}
+.lock{background:var(--bad-l);color:var(--bad);border-radius:8px;padding:10px 12px;font-size:13px}
+.bar{height:8px;border-radius:4px;background:#e4e7ec;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok)}
+.form{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;background:#fafbfc}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style>
+</head>
+<body>
+<div class="proto-banner">Protótipo com dados fictícios · P9 Posto da telemarketing · «Hoje» = 10 de dezembro de 2026</div>
+<div class="topbar"><a class="back" href="index.html">← Protótipos</a><h1>Lista de contactos de hoje</h1><span class="sub">Perfil: Telemarketing</span></div>
+<div class="wrap">
+  <div class="perfil"><b>Vista da telemarketing:</b> vê clientes, contactos, histórico comercial e lembretes. Não vê valores contratados, pagamentos nem dados financeiros.<span class="sp"></span><span class="badge info">Acesso limitado</span></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="layout">
+    <div class="card q" style="padding:0"><div style="padding:10px 12px;border-bottom:1px solid var(--line);font-weight:600">Por contactar <span style="color:var(--muted);font-weight:400" id="cnt"></span></div><div id="list"></div></div>
+    <div id="det"></div>
+  </div>
+
+  <div class="card questions">
+    <h3>Questões para validar com a Rede Clean</h3>
+    <ul>
+      <li>A telemarketing trabalha por lista diária de chamadas, ou por cliente, a pedido?</li>
+      <li>Que resultados de contacto querem registar? Estes quatro bastam (marcou, ligar mais tarde, não atendeu, não quer ser contactado)?</li>
+      <li>Há um guião de chamada por tipo de contacto (lembrete, aniversário, proposta)? Quem o escreve?</li>
+      <li>Quando o cliente quer marcar, a telemarketing cria o serviço na agenda ou passa à administração?</li>
+      <li>Que informação do cliente precisa de ver antes de ligar? Falta algo (última visita, preferências, notas)?</li>
+      <li>Como medem o desempenho do contacto comercial (chamadas, marcações, conversão)?</li>
+    </ul>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3400)}
+// estado: null = por contactar; ok = marcou; w = ligar mais tarde; p = não atendeu; no = não contactar
+let L=[
+ {id:1,n:'Sra. Inês Costa',m:'Lembrete de 6 meses',tp:'6m',tel:'912 000 101',cons:true,sv:'Sofá 3 lugares · 10 jun 2026',ult:'Chamada de satisfação a 12 jun: muito satisfeita',aniv:'12 jan',notas:'Prefere contacto de manhã.',h:[['12 jun','Chamada de satisfação'],['10 jun','Serviço: sofá 3 lugares']],st:null},
+ {id:2,n:'Sra. Teresa Antunes',m:'Pedido novo (site)',tp:'novo',tel:'917 000 606',cons:true,sv:'Sem serviços anteriores',ult:'Pediu orçamento hoje pelo formulário do site',aniv:'—',notas:'Sofá 3 lugares e um tapete.',h:[['10 dez','Pedido de orçamento (site)']],st:null},
+ {id:3,n:'Dra. Helena Cruz',m:'Aniversário a 12 dez',tp:'aniv',tel:'915 000 404',cons:true,sv:'Limpeza doméstica semanal',ult:'Aceitou a campanha de colchões',aniv:'12 dez',notas:'Cliente desde fev 2026.',h:[['6 dez','Aceitou higienização de 2 colchões'],['2 fev','Início do serviço semanal']],st:null},
+ {id:4,n:'Sr. Rui Matos',m:'Lembrete de 6 meses (tapete)',tp:'6m',tel:'913 000 202',cons:true,sv:'Tapete 2x3 · 15 jun 2026',ult:'Mensagem enviada a 8 dez, sem resposta',aniv:'3 jul',notas:'—',h:[['8 dez','Mensagem preparada e enviada'],['15 jun','Serviço: tapete 2x3']],st:null},
+ {id:5,n:'Escritório Exemplo Lda',m:'Seguimento de proposta',tp:'prop',tel:'210 000 303',cons:true,sv:'Proposta de contrato mensal (3 dez)',ult:'Proposta enviada, sem resposta',aniv:'—',notas:'Decisor: gerente administrativa.',h:[['3 dez','Proposta enviada'],['1 dez','Visita ao local']],st:null},
+ {id:6,n:'Sr. Tiago Brás',m:'Confirmar data (colchão)',tp:'6m',tel:'914 000 303',cons:true,sv:'Colchão casal · 20 mai 2026',ult:'Quer marcar para janeiro',aniv:'8 set',notas:'Pediu repetição da secagem em maio.',h:[['9 dez','Quer marcar em janeiro'],['22 mai','Pediu repetição da secagem']],st:null},
+ {id:7,n:'Sr. Nuno Dias',m:'Lembrete de 6 meses',tp:'6m',tel:'916 000 505',cons:false,sv:'Sofá 2 lugares · 10 jun 2026',ult:'Pediu para não receber campanhas (11 jun)',aniv:'5 abr',notas:'Sem consentimento de marketing.',h:[['11 jun','Pediu para não receber campanhas']],st:null,bloq:true},
+ {id:8,n:'Condomínio Jardim do Tejo',m:'Reunião a 16 dez',tp:'prop',tel:'210 000 606',cons:true,sv:'Contrato anual em negociação',ult:'Pediu desconto no contrato anual',aniv:'—',notas:'Administrador: Sr. Exemplo.',h:[['7 dez','Pediu desconto'],['1 dez','Proposta enviada']],st:null}
+];
+let sel=1;
+const SCR={
+ '6m':'Bom dia, fala [nome] da Rede Clean. Fizemos a limpeza do seu <mark>[serviço]</mark> há seis meses. Para o manter limpo e saudável, recomendamos uma nova higienização. Tem interesse em marcarmos uma data? Esta semana temos disponibilidade.',
+ 'aniv':'Bom dia, fala [nome] da Rede Clean. Liguei para lhe desejar um feliz aniversário! Agradecemos a confiança. <mark>Se precisar de alguma coisa, estamos ao dispor.</mark>',
+ 'novo':'Bom dia, fala [nome] da Rede Clean. Recebemos o seu pedido de orçamento para <mark>[serviço]</mark>. Pode dizer-me a morada e o melhor dia para uma avaliação?',
+ 'prop':'Bom dia, fala [nome] da Rede Clean. Liguei para saber se teve oportunidade de ver a proposta que enviámos a <mark>[data]</mark> e se posso esclarecer alguma dúvida.'
+};
+const RES={ok:'Marcou serviço',w:'Ligar mais tarde',p:'Não atendeu',no:'Não quer ser contactado'};
+function kp(){
+  const f=L.filter(x=>x.st),tot=L.filter(x=>!x.bloq).length;
+  $('kpis').innerHTML=`<div class="kpi"><small>Contactos feitos</small><b>${f.length} / ${tot}</b><div class="bar" style="margin-top:6px"><i style="width:${f.length/tot*100}%"></i></div></div>
+   <div class="kpi"><small>Serviços marcados</small><b style="color:var(--ok)">${L.filter(x=>x.st==='ok').length}</b></div>
+   <div class="kpi"><small>Ligar mais tarde</small><b>${L.filter(x=>x.st==='w').length}</b></div>
+   <div class="kpi"><small>Não atenderam</small><b>${L.filter(x=>x.st==='p').length}</b></div>
+   <div class="kpi"><small>Taxa de marcação</small><b>${f.length?Math.round(L.filter(x=>x.st==='ok').length/f.length*100):0}%</b></div>`;
+}
+function list(){
+  const pend=L.filter(x=>!x.st);$('cnt').textContent='· '+pend.length;
+  $('list').innerHTML=L.map(x=>`<div class="it ${x.id===sel?'on':''} ${x.st?'fin':''}" data-id="${x.id}"><span class="dot ${x.bloq?'no':x.st||''}"></span><div><b>${x.n}</b><small>${x.m}</small>${x.st?`<div><span class="badge ${x.st==='ok'?'ok':x.st==='no'?'bad':'warn'}">${RES[x.st]}</span></div>`:''}${x.bloq?'<div><span class="badge bad">Sem consentimento</span></div>':''}</div></div>`).join('');
+  document.querySelectorAll('.it').forEach(e=>e.onclick=()=>{sel=+e.dataset.id;render()});
+}
+function det(){
+  const x=L.find(y=>y.id===sel);
+  let h=`<div class="card"><div class="hd"><div><h2>${x.n}</h2><span class="badge info">${x.m}</span></div>${x.bloq?'':`<button class="callbtn" id="call">📞 Ligar ${x.tel}</button>`}</div>`;
+  if(x.bloq){
+    h+=`<div class="lock" style="margin-top:12px"><b>Contacto bloqueado.</b> Este cliente pediu para não receber contactos de marketing (${x.h[0][0]}). O sistema não permite registar uma chamada comercial. Só um administrador pode rever o consentimento.</div>`;
+  }else{
+    h+=`<div class="grid2"><div class="fld"><small>Telefone</small>${x.tel}</div><div class="fld"><small>Último serviço</small>${x.sv}</div><div class="fld"><small>Aniversário</small>${x.aniv}</div><div class="fld"><small>Notas</small>${x.notas}</div></div>
+    <div class="fld"><small>Último contacto</small>${x.ult}</div>
+    <h3 style="font-size:14px;margin:14px 0 6px">Guião sugerido</h3><div class="script">${SCR[x.tp].replace('[nome]','Joana').replace('[serviço]',x.sv.split(' · ')[0].toLowerCase()).replace('[data]','3 de dezembro')}</div>
+    <h3 style="font-size:14px;margin:14px 0 2px">Resultado da chamada</h3>
+    <div class="res" id="res">
+      <button data-r="ok"><b>Marcou serviço</b><small>Cria oportunidade ganha e sugere data na agenda</small></button>
+      <button data-r="w"><b>Ligar mais tarde</b><small>Escolher data e hora do próximo contacto</small></button>
+      <button data-r="p"><b>Não atendeu</b><small>Volta à lista dentro de 2 dias</small></button>
+      <button data-r="no"><b>Não quer ser contactado</b><small>Bloqueia contactos comerciais a este cliente</small></button>
+    </div><div id="form"></div>
+    <h3 style="font-size:14px;margin:14px 0 4px">Histórico</h3><div class="mini">${x.h.map(e=>`<div class="e"><span>${e[0]}</span><span>${e[1]}</span></div>`).join('')}</div>`;
+  }
+  $('det').innerHTML=h+'</div>';
+  if($('call'))$('call').onclick=()=>toast('Em produção: abriria a aplicação de chamadas do telemóvel/computador');
+  document.querySelectorAll('#res button').forEach(b=>b.onclick=()=>form(x,b.dataset.r));
+}
+function form(x,r){
+  const ex=r==='ok'?`<div class="row2"><div><label>Serviço pretendido</label><input value="${x.sv.split(' · ')[0]}"></div><div><label>Data sugerida</label><input type="date" value="2026-12-17"></div></div>`:
+           r==='w'?`<div class="row2"><div><label>Ligar a</label><input type="date" value="2026-12-14"></div><div><label>Hora</label><input type="time" value="10:00"></div></div>`:'';
+  $('form').innerHTML=`<div class="form"><b>${RES[r]}</b>${ex}<div style="margin-top:8px"><label>Nota (opcional)</label><textarea id="nt" rows="2"></textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button class="btn" id="c">Cancelar</button><button class="btn primary" id="s">Guardar contacto</button></div></div>`;
+  $('c').onclick=()=>$('form').innerHTML='';
+  $('s').onclick=()=>{
+    x.st=r;if(r==='no'){x.bloq=true;x.cons=false}
+    x.h.unshift(['10 dez',RES[r]+($('nt').value.trim()?' · '+$('nt').value.trim():'')]);
+    const nx=L.find(y=>!y.st&&!y.bloq);if(nx)sel=nx.id;
+    toast(r==='ok'?'Registado. Criada oportunidade ganha (P8) e pedido de marcação para a administração.':r==='no'?'Cliente bloqueado para contactos comerciais · registado':'Contacto registado no histórico do cliente');
+    render();
+  };
+}
+function render(){kp();list();det()}
+render();
+</script>
+</body>
+</html>
